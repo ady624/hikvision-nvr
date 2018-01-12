@@ -152,4 +152,4 @@ Check the service status:
 
     sudo systemctl status nvr
 
-Enjoy :)
+Enjoy! :)
