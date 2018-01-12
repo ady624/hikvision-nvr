@@ -56,6 +56,18 @@ Give it execute rights:
 
 **VERY IMPORTANT**: If you have a firewall installed, make sure you allow inbound connections to port 26275.
 
+Go to your SmartThings app and go to Marketplace. Scroll down to My Apps and click on the Hikvision Motion Sensors app. Open the application once and exit it. Then configure your NVR for email as follows:
+
+Go to Configuration > Network > Advanced Settings
+
+Enter a name for Sender
+Enter a valid email address for Sender's Address
+Enter your server (RaspberryPI)'s IP for the SMTP server
+Enter port 26275
+
+Enter the username matching the config.json
+Enter the password matching the config.json
+
 Edit the configuration file. Copy the provided config.json.sample and rename it as config.json
 
     {
@@ -94,19 +106,6 @@ Save the config.json file and then, to run the server, run either
 or, alternatively, if you made an executable at the optional step above:
 
         nvr
-
-
-With nvr running, go to your SmartThings app and go to Marketplace. Scroll down to My Apps and click on the Hikvision Motion Sensors app. Open the application once and exit it. Then configure your NVR for email as follows:
-
-Go to Configuration > Network > Advanced Settings
-
-Enter a name for Sender
-Enter a valid email address for Sender's Address
-Enter your server (RaspberryPI)'s IP for the SMTP server
-Enter port 26275
-
-Enter the username matching the config.json
-Enter the password matching the config.json
 
 # Installing nvr as a system service
 
