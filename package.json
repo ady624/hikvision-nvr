@@ -1,0 +1,11 @@
+{
+  "name" : "homecloudhub",
+  "dependencies" : {
+    "mailparser" : "*",
+    "smtp-server" : "*",
+    "nodemailer" : "*"
+  },
+  "scripts": {
+    "start" : "node nvr/app.js"
+  }
+}

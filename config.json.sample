@@ -1,0 +1,23 @@
+{
+	"nvr": {
+		"ip": "a.b.c.d",
+		"port": 26275,
+		"sender": "user@domain.com",
+		"user": "user",
+		"password": "password"
+	},
+	"st": {
+		"host": "graph.api.smartthings.com",
+		"accessToken": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+		"appId": "ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj"
+	},
+	"mail": {
+	    "host": "smtp.gmail.com",
+	    "port": 587,
+	    "secure": false,
+	    "auth": {
+	        "user": "user@domain.com",
+	        "pass": "password"
+	    }
+	}
+}
