@@ -10,28 +10,27 @@ If you're having any issues, feel free to open issues and PRs here.
 
 **Note:** There are two parts to the installation:
  * Install the SmartApp and its associated Device Handlers
- * Install the NVR NodeJS server
+ * Install the nvr NodeJS server
 
 # Installing the SmartApp and its associated Device Handlers
 
 Go to your SmartThings [IDE](https://graph.api.smartthings.com/login/auth) and go to your [SmartApps](https://graph.api.smartthings.com/ide/apps). Click on Settings and add a new repository with owner **ady624**, name **hikvision-nvr** and branch **master**. Click Ok.
 
-Click on the Update from Repo button and select the hikvision-nvr repo. Select the Hikvision Motion Sensors application and install it. Do the same for the Device Handlers, selecting Hikvision Motion Sensor.
+Click on the Update from Repo button and select the hikvision-nvr repo. Select the Hikvision Motion Sensors application and install it. Do the same for the Device Handlers, selecting Hikvision Motion Sensor. Enable OATH in the smart app settings. 
 
 # Installing the NVR NodeJS server
 
 Install NodeJS. You can follow these [instructions](https://nodejs.org/en/download/package-manager/) to install Node JS 8.x or later.
 
-On your linux machine, create a folder /var/node (if it doesn't exist yet). Download the nvr folder onto your linux machine. I use this on a Raspberry Pi running Raspbian. Install necessary modules:
+On your linux machine, create a folder /var/node (if it doesn't exist yet). Clone the github hikvision-nvr folder onto your linux machine and rename as nvr:
+
+    git clone https://github.com/ady624/hikvision-nvr nvr
+
+I use this on a Raspberry Pi running Raspbian. Install necessary modules:
 
     sudo npm install smtp-server
     sudo npm install mailparser
     sudo npm install nodemailer
-
-Test the application:
-
-        node /var/node/nvr/app.js
-
 
 #Making the app a bash executable (optional)
 
@@ -94,10 +93,10 @@ Edit the configuration file. Copy the provided config.json.sample and rename it 
     	}
     }
 
-The nvr.ip reffers to the IP of your NVR, it is used to authenticate the source.
+The nvr.ip refers to the IP of your NVR, it is used to authenticate the source.
 The nvr.sender needs to match the NVR's Sender's Address configured below.
 The nvr.user and nvr.password must match the username and password entered in your NVR settings configured below.
-For ST, the host is whatever your IDE host resides on, for US customers, most likely graph.api.smartthings.com - use the URL in your IDE. The accessToken and appId need a little digging, until the app will be adapted to provide them. Open your IDE and go to Locations, then click on the smartapps link in the location you installed the app, then find it in the list and click on its name. The access token is found in the Application State. You can find all three parameters in the endpoint field of the form https://{{host}}:443/api/token/{{accessToken}}/smartapps/installations/{{appId}}/
+For ST, the host is whatever your IDE host resides on, for US customers, most likely graph.api.smartthings.com or graph-na02-useast1.api.smartthings.com - use the URL in your IDE. The accessToken and appId need a little digging, until the app will be adapted to provide them. Open your IDE and go to Locations, then click on the smartapps link in the location you installed the app, then find it in the list and click on its name. The access token is found in the Application State. If you don't see the access token make sure you have enabled OATH in the smartapp. You can find all three parameters in the endpoint field of the form https://{{host}}:443/api/token/{{accessToken}}/smartapps/installations/{{appId}}/
 If you want your mail forwarded over, you'll need to enter your email settings in the mail section.
 Save the config.json file and then, to run the server, run either
 
@@ -107,7 +106,25 @@ or, alternatively, if you made an executable at the optional step above:
 
         nvr
 
-# Installing nvr as a system service
+# Installing nvr as a system service using forever (Easy Way)
+To keep this script running either provision the script using forever-service (easy way) or as a standard system service as instructed below (hard way). To use forever-service, first install "forever" and "forever-service" per these [instructions](https://www.npmjs.com/package/forever-service), or simply:
+    
+    npm install -g forever
+    npm install -g forever-service
+
+To start the service, enter the following command:
+
+    sudo forever-service install nvr --script /var/node/nvr/app.js
+
+Forever-service will make sure the script starts back up after a reboot, and uses "forever" to do the heavy lifting. To check the status of this script enter the following:
+
+    sudo forever list
+
+To stop the service, enter:
+
+    sudo forever-service stop nvr
+    
+# Installing nvr as a system service (Hard Way)
 
 Create a new system username to run nvr under:
 
