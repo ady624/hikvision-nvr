@@ -65,34 +65,41 @@ const server = new SMTPServer({
 									cameraName = data;
 								}
 								break;
-						}
-						if (!!eventType && !!cameraName && !!channelName) {
-							var body = JSON.stringify({
-								eventType: eventType,
-								eventTime: eventTime.getTime(),
-								cameraName: cameraName,
-								channelName: channelName
-							});
-
-							var headers = {
-								'Content-Type': 'application/json',
-								'Content-Length': body.length
-							};
-
-							var options = {
-								host: config.st.host,
-								path: '/api/token/' + config.st.accessToken + '/smartapps/installations/' + config.st.appId + '/event',
-								port: 443,
-								method: 'PUT',
-								headers: headers
-							};
-
-							https.request(options).write(body);
+							case 'IPC NAME': cameraName = data; break;
+							case 'CHANNEL NAME': channelName = data; break;
+							//default: console.log("Item: " + item +", Data: " + data); break;
 						}
 					}
 				}
-				console.log("Event " + eventType + " happened at " + eventTime + ' for camera ' + cameraName + ' on channel ' + channelName);
-				sendEmail(mail);
+				if (!!eventType && !!cameraName && !!channelName) {
+					var body = JSON.stringify({
+						eventType: eventType,
+						eventTime: eventTime.getTime(),
+						cameraName: cameraName,
+						channelName: channelName
+					});
+
+					var headers = {
+						'Content-Type': 'application/json',
+						'Content-Length': body.length
+					};
+
+					var options = {
+						host: config.st.host,
+						path: '/api/token/' + config.st.accessToken + '/smartapps/installations/' + config.st.appId + '/event',
+						port: 443,
+						method: 'PUT',
+						headers: headers
+					};
+					console.log("Event " + eventType + " happened at " + eventTime + " for camera " + cameraName + " on channel " + channelName);
+					https.request(options).write(body);
+					sendEmail(mail);
+					
+				} else {
+					console.log("Event email not recognized as valid event!");
+				}
+				//console.log("Event " + eventType + " happened at " + eventTime + ' for camera ' + cameraName + ' on channel ' + channelName);
+				//sendEmail(mail);
 			});
             callback(null, 'Message queued, maybe...');
         });
